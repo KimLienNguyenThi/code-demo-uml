@@ -282,8 +282,10 @@
                         // alone.startLoading();
                     },
                     data: function (data) { //Chuẩn bị dữ liệu trước khi gửi yêu cầu.
-                        var settings = $("#tblDanhSachPhieuTra").dataTable().fnSettings();
-                        var currentPageIndex = Math.ceil(settings._iDisplayStart / settings._iDisplayLength) + 1;
+                        var tblDanhSachPhieuTraA = $("#tblDanhSachPhieuTra").DataTable();
+                        var settings = tblDanhSachPhieuTraA.settings();
+
+                        var currentPageIndex = Math.ceil(settings[0]._iDisplayStart / settings[0]._iDisplayLength) + 1;
                         var request =
                         {
                             // CategoryId: parseInt($('#ddlCategory').val(), 10),
