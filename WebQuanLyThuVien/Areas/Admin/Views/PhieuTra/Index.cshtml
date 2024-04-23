@@ -447,8 +447,9 @@
                         // alone.startLoading();
                     },
                     data: function (data) { //Chuẩn bị dữ liệu trước khi gửi yêu cầu.
-                        var settings = $("#tablephieuMuon").dataTable().fnSettings();
-                        var currentPageIndex = Math.ceil(settings._iDisplayStart / settings._iDisplayLength) + 1;
+                        var tablephieuMuonA = $("#tablephieuMuon").DataTable();
+                        var settings = tablephieuMuonA.settings();
+                        var currentPageIndex = Math.ceil(settings[0]._iDisplayStart / settings[0]._iDisplayLength) + 1;
                         var request =
                         {
                             // CategoryId: parseInt($('#ddlCategory').val(), 10),

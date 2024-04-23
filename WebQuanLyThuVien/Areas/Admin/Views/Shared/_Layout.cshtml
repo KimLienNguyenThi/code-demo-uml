@@ -34,6 +34,8 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="~/Content/Clients/dist/css/adminlte.min.css">
 
+
+
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -104,9 +106,9 @@
                         <span class="dropdown-item dropdown-header">Menu</span>
                         <div class="dropdown-divider"></div>
                         @*<a href="#" class="dropdown-item">
-                            <i class="fa-solid fa-gear"></i> Chỉnh sửa thông tin
-                            <span class="float-right text-muted text-sm"></span>
-                        </a>*@
+                                <i class="fa-solid fa-gear"></i> Chỉnh sửa thông tin
+                                <span class="float-right text-muted text-sm"></span>
+                            </a>*@
                         <div class="dropdown-divider"></div>
                         <a href="javascript:void(0);" onclick="confirmLogout()" class="dropdown-item">
                             <i class="fas fa-sign-out-alt mr-2"></i> Đăng xuất
@@ -167,9 +169,16 @@
     <!-- AdminLTE for demo purposes -->
     <script src="~/Content/Clients/dist/js/demo.js"></script>
 
-    <link href="https://datatables.net/download/build/nightly/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-    <script src="https://datatables.net/download/build/nightly/jquery.dataTables.js"></script>
-    <script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>
+    @*<link href="https://nightly.datatables.net/css/dataTables.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://nightly.datatables.net/js/dataTables.min.js"></script>*@
+
+
+
+    <link href="https://cdn.datatables.net/v/bs4/dt-2.0.5/datatables.min.css" rel="stylesheet">
+
+    <script src="https://cdn.datatables.net/v/bs4/dt-2.0.5/datatables.min.js"></script>
+
+    @*<script src="https://cdn.rawgit.com/ashl1/datatables-rowsgroup/v1.0.0/dataTables.rowsGroup.js"></script>*@
 
     <!-- Page specific script -->
     <script>
