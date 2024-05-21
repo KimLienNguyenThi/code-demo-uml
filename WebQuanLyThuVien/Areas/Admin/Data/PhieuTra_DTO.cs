@@ -28,8 +28,16 @@ namespace WebQuanLyThuVien.Areas.Admin.Data
 
     public class PhieuTra_GroupMaPM_DTO
     {
-        public int MaPM { get; set; }
-        public int CountRow { get; set; }
+        public PhieuTra_GroupKey PhieuTra_GroupKey { get; set; }
         public List<PhieuTra_DTO> DataPhieuTras { get; set; }
+    }
+
+    public class PhieuTra_GroupKey
+    {
+        public int MaPM { get; set; }
+
+        public int MaThe { get; set; }
+        public String HoTenDG { get; set; }
+        public String SDT { get; set; }
     }
 }

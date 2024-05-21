@@ -8,7 +8,7 @@ namespace WebQuanLyThuVien.Areas.Admin.Interfaces.Services
 {
     public interface IPhieuTraService
     {
-        IEnumerable<PhieuTra_GroupMaPM_DTO> GetAllPhieuTra();
-        PagingResult<PhieuTra_DTO> GetAllPhieuTraPaging(GetListPhieuTraPaging req);
+       // IEnumerable<PhieuTra_GroupMaPM_DTO> GetAllPhieuTra();
+        PagingResult<PhieuTra_GroupMaPM_DTO> GetAllPhieuTraPaging(GetListPhieuTraPaging req);
     }
 }

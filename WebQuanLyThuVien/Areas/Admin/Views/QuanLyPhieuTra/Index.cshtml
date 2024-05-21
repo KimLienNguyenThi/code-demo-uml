@@ -20,17 +20,17 @@
 
                             <div class="card-tools col-3">
                                 @*<div class="input-group input-group-sm pt-1">
-                                    <input type="text"
-                                           name="table_search"
-                                           class="form-control float-right"
-                                           placeholder="Search" id="inputSearch" onkeypress="handleKeyPress(event)" />
+                                        <input type="text"
+                                               name="table_search"
+                                               class="form-control float-right"
+                                               placeholder="Search" id="inputSearch" onkeypress="handleKeyPress(event)" />
 
-                                    <div class="input-group-append">
-                                        <button type="submit" onclick="search()" class="btn btn-default">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                </div>*@
+                                        <div class="input-group-append">
+                                            <button type="submit" onclick="search()" class="btn btn-default">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>*@
                             </div>
 
                             <div class="col-3">
@@ -43,20 +43,17 @@
                         <form>
                             <!--Danh sách phieu trả-->
                             <div class="text-center">
-                                <table  id="tblDanhSachPhieuTra" class="table table-hover table-head-fixed table-bordered">
+                                <table id="tblDanhSachPhieuTra" class="table table-hover table-head-fixed table-bordered">
                                     <thead>
                                         <tr>
+                                            <th>Xem Chi tiết</th>
                                             <th>Mã PM</th>
-                                            <th>SEE ALL</th>
-                                            <th>Mã PT</th>
-                                            <th>Ngày trả</th>
                                             <th>Mã Thẻ</th>
                                             <th>Độc giả</th>
                                             <th>SDT</th>
-                                            <th>Mã NV</th>
                                         </tr>
                                     </thead>
-                               
+
                                 </table>
                             </div>
                         </form>
@@ -103,7 +100,6 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-
                                 <th>Mã sách</th>
                                 <th>Tên sách</th>
                                 <th>S/Lượng trả</th>
@@ -164,7 +160,7 @@
 
                 <!--Danh sách sách mượn-->
                 <div class="text-center">
-                    <table  class="table table-hover">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Mã PT</th>
@@ -425,39 +421,36 @@
                 },
                 columns: [
                     {
+
+                        className: 'dt-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: ''
+                    },
+                    {
                         name: 'first',
-                        "data": "MaPM", "width": "7%"
+                        "data": "PhieuTra_GroupKey.MaPM", "width": "7%"
+                    },
+                    //{
+                    //    name: 'second',
+                    //    render: function (data, type, row) {
+                    //        return '<button class="btn btn-icon btn-hover btn-sm btn-see-all" id="' + row.MaPM +'_'+ row.MaThe + '">See All</button>'
+                    //    }
+                    //},
+                    {
+                        "data": "PhieuTra_GroupKey.MaThe", "width": "20%"
                     },
                     {
-                        name: 'second',
-                        render: function (data, type, row) {
-                            return '<button class="btn btn-icon btn-hover btn-sm btn-see-all" id="' + row.MaPM +'_'+ row.MaThe + '">See All</button>'
-                        }
+                        "data": "PhieuTra_GroupKey.HoTenDG", "width": "25%"
                     },
                     {
-                        "data": "MaPT", "width": "10%"
-                        //render: $.fn.dataTable.render.number(',')
+                        "data": "PhieuTra_GroupKey.SDT", "width": "20%"
                     },
-                    {
-                        "data": "NgayTra", "width": "15%",
-                        render: DataTable.render.datetime('D-M-yyyy')
-                    },
-                    {
-                        "data": "MaThe", "width": "15%"
-                    },
-                    {
-                        "data": "HoTenDG", "width": "15%"
-                    },
-                    {
-                        "data": "SDT", "width": "15%"
-                    },
-                    {
-                        "data": "MaNV", "width": "15%"
-                    },
-                   
                 ],
                 rowGroup: {
-                    dataSrc: "MaPM"
+                    endRender: function (rows, group) {
+                        return group + ' (' + rows.count() + ' rows)';
+                    }
                 },
                 columnDefs: [{//Nếu giá trị của một ô là null hoặc undefined, sẽ hiển thị giá trị mặc định là "-".
                     "defaultContent": "-",
@@ -525,6 +518,62 @@
 
         });
 
+        $('#tblDanhSachPhieuTra').on('click', 'td.dt-control', function (e) {
+            let tr = e.target.closest('tr');
+            let row = $('#tblDanhSachPhieuTra').DataTable().row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+            }
+            else {
+                // Open this row
+                row.child(format(row.data())).show();
+            }
+        });
+
+        function format(d) {
+            var render = "";
+            $.each(d.DataPhieuTras, function (i, item) {
+                render += '<tr>';
+                render += '<td> <button class="btn btn-icon btn-hover btn-sm btn-see-all" id="' + item.MaPM + '_' + item.MaThe + '"> See All</button></td>';
+                render += '<td>' + item.MaPT + '</td>';
+                render += '<td >' + moment(item.NgayTra).format("YYYY-MM-DD") + '</td>';
+                render += '<td >' + moment(item.NgayMuon).format("YYYY-MM-DD") + '</td>';
+                render += '<td>' + item.MaNV + '</td>';
+                render += '</tr>';
+                });
+
+            return (
+                '<table  style="border-bottom: inset" class="tablechild table table-hover table-head-fixed table-bordered">' +
+                '<thead>' +
+                '<tr>' +
+                    '<th>Thông tin phiếu trả</th>' +
+                    '<th>Mã PT</th>' +
+                    '<th>Ngày trả</th>' +
+                    '<th>Ngày mượn</th>' +
+                    '<th>Mã NV</th>' +
+                    '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                render +
+                '</tbody>' +
+                '</table>'
+            );
+        }
+
+
+        var render = "";
+            //            $.each(res.Result, function (i, item) {
+            //                render += '<tr class="phieuMuonRow" aria-expanded="false" data-widget="expandable-table">';
+            //                render += '<td  class="selectMaPm">' + item.MaPM + '</td>';
+            //                render += '<td >' + item.MaThe + '</td>';
+            //                render += '<td >' + item.HoTenDG + '</td>';
+            //                render += '<td >' + item.SDT + '</td>';
+            //                render += '<td  class="date">' + formatDate(item.NgayMuon) + '</td>';
+            //                render += '<td  class="date">' + formatDate(item.HanTra) + '</td>';
+            //                render += '</tr>';
+            //            });
     </script>
 }
 
