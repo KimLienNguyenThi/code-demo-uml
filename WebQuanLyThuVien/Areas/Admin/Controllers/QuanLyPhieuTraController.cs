@@ -26,8 +26,8 @@ namespace WebQuanLyThuVien.Areas.Admin.Controllers
             }
             else
             {
-                var phieuTra = _phieuTraService.GetAllPhieuTra();
-                ViewData["PhieuTra"] = phieuTra;
+                //var phieuTra = _phieuTraService.GetAllPhieuTra();
+                //ViewData["PhieuTra"] = phieuTra;
                 return View();
             }
         }

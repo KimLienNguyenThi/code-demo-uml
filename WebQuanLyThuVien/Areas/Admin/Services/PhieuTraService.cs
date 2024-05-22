@@ -20,43 +20,43 @@ namespace WebQuanLyThuVien.Areas.Admin.Services
 
         private UnitOfWork<QuanLyThuVienEntities> unitOfWork = new UnitOfWork<QuanLyThuVienEntities>();
 
-        public IEnumerable<PhieuTra_GroupMaPM_DTO> GetAllPhieuTra()
-        {
-            var listPhieutra_All =
-                (from PhieuTra in unitOfWork.Context.PhieuTras
-                 join DocGia in unitOfWork.Context.DocGias
-                    on PhieuTra.MaThe equals DocGia.MaDG
-                 join NhanVien in unitOfWork.Context.NhanViens
-                 on PhieuTra.MaNV equals NhanVien.MaNV
+        //public IEnumerable<PhieuTra_GroupMaPM_DTO> GetAllPhieuTra()
+        //{
+        //    var listPhieutra_All =
+        //        (from PhieuTra in unitOfWork.Context.PhieuTras
+        //         join DocGia in unitOfWork.Context.DocGias
+        //            on PhieuTra.MaThe equals DocGia.MaDG
+        //         join NhanVien in unitOfWork.Context.NhanViens
+        //         on PhieuTra.MaNV equals NhanVien.MaNV
 
-                 select new PhieuTra_DTO
-                 {
-                     MaPT = PhieuTra.MaPT,
-                     NgayTra = PhieuTra.NgayTra,
-                     MaPM = PhieuTra.MaPM.Value,
-                     MaThe = DocGia.MaDG,
-                     HoTenDG = DocGia.HoTenDG,
-                     SDT = DocGia.SDT,
-                     MaNV = NhanVien.MaNV
-                 }).AsEnumerable()
-                 .GroupBy(g => g.MaPM, (key, g) => new PhieuTra_GroupMaPM_DTO
-                 {
-                     MaPM = key,
-                     DataPhieuTras = g.Select(phieutra => new PhieuTra_DTO
-                     {
-                         MaPT = phieutra.MaPT,
-                         NgayTra = phieutra.NgayTra,
-                         MaPM = phieutra.MaPM,
-                         MaThe = phieutra.MaThe,
-                         HoTenDG = phieutra.HoTenDG,
-                         SDT = phieutra.SDT,
-                         MaNV = phieutra.MaNV
-                     }).ToList(),
-                     CountRow = g.Count()
-                 }).ToList();
+        //         select new PhieuTra_DTO
+        //         {
+        //             MaPT = PhieuTra.MaPT,
+        //             NgayTra = PhieuTra.NgayTra,
+        //             MaPM = PhieuTra.MaPM.Value,
+        //             MaThe = DocGia.MaDG,
+        //             HoTenDG = DocGia.HoTenDG,
+        //             SDT = DocGia.SDT,
+        //             MaNV = NhanVien.MaNV
+        //         }).AsEnumerable()
+        //         .GroupBy(g => g.MaPM, (key, g) => new PhieuTra_GroupMaPM_DTO
+        //         {
+        //             MaPM = key,
+        //             DataPhieuTras = g.Select(phieutra => new PhieuTra_DTO
+        //             {
+        //                 MaPT = phieutra.MaPT,
+        //                 NgayTra = phieutra.NgayTra,
+        //                 MaPM = phieutra.MaPM,
+        //                 MaThe = phieutra.MaThe,
+        //                 HoTenDG = phieutra.HoTenDG,
+        //                 SDT = phieutra.SDT,
+        //                 MaNV = phieutra.MaNV
+        //             }).ToList(),
+        //             CountRow = g.Count()
+        //         }).ToList();
 
-            return listPhieutra_All;
-        }
+        //    return listPhieutra_All;
+        //}
         private List<PhieuTra_GroupMaPM_DTO> listPhieutra_All;
         public List<DTO_Sach_Tra> Get_ChiTietPT_ByMaPM(int maPM)
         {
@@ -121,7 +121,7 @@ namespace WebQuanLyThuVien.Areas.Admin.Services
             return listDTO_Sach_Tra;
         }
 
-        public PagingResult<PhieuTra_DTO> GetAllPhieuTraPaging(GetListPhieuTraPaging req)
+        public PagingResult<PhieuTra_GroupMaPM_DTO> GetAllPhieuTraPaging(GetListPhieuTraPaging req)
         {
             var query =
                 (from PhieuTra in unitOfWork.Context.PhieuTras
@@ -139,30 +139,36 @@ namespace WebQuanLyThuVien.Areas.Admin.Services
                      HoTenDG = DocGia.HoTenDG,
                      SDT = DocGia.SDT,
                      MaNV = NhanVien.MaNV
-                 });
+                 })
 
-            //.AsQueryable()
-            //.GroupBy(g => g.MaPM, (key, g) => new PhieuTra_GroupMaPM_DTO
-            //{
-            //    MaPM = key,
-            //    DataPhieuTras = g.Select(phieutra => new PhieuTra_DTO
-            //    {
-            //        MaPT = phieutra.MaPT,
-            //        NgayTra = phieutra.NgayTra,
-            //        MaPM = phieutra.MaPM,
-            //        MaThe = phieutra.MaThe,
-            //        HoTenDG = phieutra.HoTenDG,
-            //        SDT = phieutra.SDT,
-            //        MaNV = phieutra.MaNV
-            //    }).ToList(),
-            //    CountRow = g.Count()
-            //});
+            .AsQueryable()
+            .GroupBy(g => new { g.MaPM, g.HoTenDG, g.MaThe, g.SDT}, (key, g) => new PhieuTra_GroupMaPM_DTO
+            {
+                PhieuTra_GroupKey = new PhieuTra_GroupKey()
+                {
+                    HoTenDG = key.HoTenDG,
+                    SDT= key.SDT,
+                    MaThe= key.MaThe,
+                    MaPM = key.MaPM,
+                },
+                DataPhieuTras = g.Select(phieutra => new PhieuTra_DTO
+                {
+                    MaPT = phieutra.MaPT,
+                    NgayTra = phieutra.NgayTra,
+                    MaPM = phieutra.MaPM,
+                    MaThe = phieutra.MaThe,
+                    HoTenDG = phieutra.HoTenDG,
+                    SDT = phieutra.SDT,
+                    MaNV = phieutra.MaNV
+                }).ToList(),
+                //CountRow = g.Count()
+            });
 
             var totalRow = query.Count();
 
-            var listPhieutras = query.OrderByDescending(x => x.MaPM).Skip((req.Page - 1) * req.PageSize).Take(req.PageSize).ToList();
+            var listPhieutras = query.OrderByDescending(x => x.PhieuTra_GroupKey.MaPM).Skip((req.Page - 1) * req.PageSize).Take(req.PageSize).ToList();
 
-            return new PagingResult<PhieuTra_DTO>()
+            return new PagingResult<PhieuTra_GroupMaPM_DTO>()
             {
                 Results = listPhieutras,
                 CurrentPage = req.Page,
